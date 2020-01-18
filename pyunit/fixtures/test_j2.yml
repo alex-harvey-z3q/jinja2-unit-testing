@@ -1,0 +1,32 @@
+---
+'./template.yml.j2':
+  - sceptre_user_data:
+      - 
+        Name: WebSG
+        GroupDescription: Web SG Inbound
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: 80
+            ToPort: 80
+            CidrIp: 0.0.0.0/0
+          - IpProtocol: tcp
+            FromPort: 443
+            ToPort: 443
+            CidrIp: 0.0.0.0/0
+  - sceptre_user_data:
+      - 
+        Name: App1SG
+        GroupDescription: First app inbound
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: 80
+            ToPort: 80
+            CidrIp: 0.0.0.0/0
+      - 
+        Name: App2SG
+        GroupDescription: Second app inbound
+        SecurityGroupIngress:
+          - IpProtocol: tcp
+            FromPort: 443
+            ToPort: 443
+            CidrIp: 0.0.0.0/0
