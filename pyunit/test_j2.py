@@ -4,6 +4,9 @@ import unittest
 import jinja2
 import os, yaml, subprocess
 
+from yamllint.config import YamlLintConfig
+from yamllint import linter
+
 COMPILED = '.compiled-j2'
 DEVNULL = open(os.devnull, 'w')
 
@@ -16,6 +19,13 @@ class TestJ2(unittest.TestCase):
         except yaml.YAMLError as exc:
             print(exc)
 
+    conf = YamlLintConfig('{\
+            extends: default,\
+            rules: {\
+                new-line-at-end-of-file: disable,\
+                document-start: disable\
+            }}')
+
     def setUp(self):
         if not os.path.exists(COMPILED):
             os.makedirs(COMPILED)
@@ -24,7 +34,7 @@ class TestJ2(unittest.TestCase):
         """
         Using test data sets found in pyunit/fixtures/test_j2.yml,
         ensure that all Jinja2 templates compile and that the generated
-        CloudFormation templates validate.
+        CloudFormation templates pass Yamllint tests and validate.
         """
 
         for full_path, contexts in self.test_data.items():
@@ -48,6 +58,9 @@ class TestJ2(unittest.TestCase):
                     yaml.load(rendered, Loader=yaml.BaseLoader)
                 except:
                     self.fail("Compiled template is not valid YAML")
+
+                gen = linter.run(full_path, self.conf)
+                self.assertFalse(list(gen), "Yamllint issues in compiled template")
 
                 try:
                     print("Validating {} ...".format(compiled))
