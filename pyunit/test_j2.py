@@ -20,10 +20,10 @@ class TestJ2(unittest.TestCase):
             print(exc)
 
     conf = YamlLintConfig('{\
-            extends: default,\
+            extends: relaxed,\
             rules: {\
+                key-duplicates: enable,\
                 new-line-at-end-of-file: disable,\
-                document-start: disable\
             }}')
 
     def setUp(self):
@@ -59,7 +59,7 @@ class TestJ2(unittest.TestCase):
                 except:
                     self.fail("Compiled template is not valid YAML")
 
-                gen = linter.run(full_path, self.conf)
+                gen = linter.run(rendered, self.conf)
                 self.assertFalse(list(gen),
                         "Yamllint issues in compiled template")
 
