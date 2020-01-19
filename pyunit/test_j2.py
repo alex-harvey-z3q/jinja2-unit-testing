@@ -60,7 +60,8 @@ class TestJ2(unittest.TestCase):
                     self.fail("Compiled template is not valid YAML")
 
                 gen = linter.run(full_path, self.conf)
-                self.assertFalse(list(gen), "Yamllint issues in compiled template")
+                self.assertFalse(list(gen),
+                        "Yamllint issues in compiled template")
 
                 try:
                     print("Validating {} ...".format(compiled))
